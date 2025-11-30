@@ -1,0 +1,7 @@
+## Interface: 110205,110207,12000
+## Title: Hide Community Chat
+## Notes: Hides the Guild & Communities chat by default and can be toggled with a button
+## Author: Mon3yb
+## Version: v1.0
+
+HideCommunitiesChat.lua
