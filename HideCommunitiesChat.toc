@@ -2,6 +2,9 @@
 ## Title: Hide Community Chat
 ## Notes: Hides the Guild & Communities chat by default and can be toggled with a button
 ## Author: Mon3yb
-## Version: v1.0
+## Version: v1.0.0
+
+## X-Curse-Project-ID: 1395886
+## X-Wago-ID: XKq92dKy
 
 HideCommunitiesChat.lua
