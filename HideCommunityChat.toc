@@ -11,4 +11,4 @@
 ## X-Curse-Project-ID: 1395886
 ## X-Wago-ID: XKq92dKy
 
-HideCommunitiesChat.lua
+HideCommunityChat.lua
