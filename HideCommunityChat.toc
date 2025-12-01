@@ -8,7 +8,7 @@
 ## X-Category: Chat & Communication, Guild
 ## X-License: Unlicense: Anyone is free to copy, modify, publish, use, compile, sell, or distribute this software, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means.
 ## X-Website: https://github.com/Mon3yb/HideCommunityChat
-## X-Curse-Project-ID: 1395886
+## X-Curse-Project-ID: 1396031
 ## X-Wago-ID: XKq92dKy
 
 HideCommunityChat.lua
