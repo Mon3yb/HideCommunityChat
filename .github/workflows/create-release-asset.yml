@@ -1,56 +1,43 @@
-name: Attach addon zip to releases
+name: Build release zip
 
 on:
   release:
     types: [published]
-  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  build-and-upload-zip:
+  build-zip:
     runs-on: ubuntu-latest
 
+    env:
+      # Repo name from the event payload, e.g. "HideCommunityChat"
+      REPO_NAME: ${{ github.event.repository.name }}
+      # Tag name of the release, e.g. "v1.0.0" or "1.0.0"
+      TAG_NAME: ${{ github.event.release.tag_name }}
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Determine release info
-      - name: Determine release info
-        id: info
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Compute archive name
+        id: vars
         run: |
-          if [ -n "${{ github.event.release.tag_name }}" ]; then
-            TAG="${{ github.event.release.tag_name }}"
-            RELEASE_NAME="${{ github.event.release.name }}"
-          else
-            TAG=$(gh release list --limit 1 --json tagName --jq '.[0].tagName')
-            RELEASE_NAME=$(gh release view "$TAG" --json name --jq '.name')
-          fi
+          # Strip a leading "v" from the tag if present (v1.0.0 -> 1.0.0)
+          VERSION="${TAG_NAME#v}"
 
-          # Trim whitespace
-          RELEASE_NAME="$(echo "$RELEASE_NAME" | xargs)"
+          ZIP_NAME="${REPO_NAME}-${VERSION}.zip"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "zip_name=$ZIP_NAME" >> "$GITHUB_OUTPUT"
 
-          # Strip leading v
-          CLEAN_VERSION="${RELEASE_NAME#v}"
-
-          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-          echo "version=$CLEAN_VERSION" >> "$GITHUB_OUTPUT"
-
-      # Prepare addon folder
-      - name: Prepare addon folder
-        run: |
-          ADDON_NAME="HideCommunityChat"
-          mkdir "$ADDON_NAME"
-          cp -r $ADDON_NAME.* "$ADDON_NAME"/ || true
-
-      # Remove excluded files
+            # Remove files you don't want in the zip
+            
       - name: Remove excluded files
         run: |
           ADDON_NAME="HideCommunityChat"
 
+          # Define files or patterns to exclude (relative to addon root)
           EXCLUDE_LIST=(
             "LICENSE"
             "*.md"
@@ -59,33 +46,31 @@ jobs:
 
           for pattern in "${EXCLUDE_LIST[@]}"; do
             matches=$(find "$ADDON_NAME" -type f -name "$pattern" 2>/dev/null || true)
+
             if [ -n "$matches" ]; then
+              echo "Excluding pattern '$pattern':"
+              echo "$matches"
               while IFS= read -r file; do
                 rm "$file"
               done <<< "$matches"
+            else
+              echo "No matches for pattern '$pattern'"
             fi
           done
 
-      # Create final zip: HideCommunityChat-1.0.0.zip
-      - name: Create zip
-        id: create_zip
+      - name: Create zip file
         run: |
-          REPO="${{ github.event.repository.name }}"
-          VERSION="${{ steps.info.outputs.version }}"
-          ADDON_NAME="HideCommunityChat"
+          ZIP_NAME='${{ steps.vars.outputs.zip_name }}'
+          zip -r "$ZIP_NAME" .
 
-          ZIP_NAME="${REPO}-${VERSION}.zip"
-          echo "Creating zip: $ZIP_NAME"
-
-          zip -r "$ZIP_NAME" "$ADDON_NAME"
-
-          echo "zip_name=$ZIP_NAME" >> $GITHUB_OUTPUT
-
-      # Upload zip to the release
-      - name: Upload zip to release
+      - name: Upload zip as release asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG_NAME="${{ steps.info.outputs.tag }}"
-          ZIP_NAME="${{ steps.create_zip.outputs.zip_name }}"
+          TAG_NAME='${{ github.event.release.tag_name }}'
+          ZIP_NAME='${{ steps.vars.outputs.zip_name }}'
+
+          echo "Uploading $ZIP_NAME to release $TAG_NAME"
+
+          # GitHub CLI is available on GitHub-hosted runners.
           gh release upload "$TAG_NAME" "$ZIP_NAME" --clobber
