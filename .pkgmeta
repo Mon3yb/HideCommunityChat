@@ -1,0 +1,6 @@
+package-as: HideCommunityChat
+
+ignore:
+  - *.md
+  - *.sh
+  - LICENSE
