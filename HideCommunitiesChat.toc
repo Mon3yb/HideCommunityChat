@@ -1,9 +1,13 @@
 ## Interface: 110205,110207,12000
+
 ## Title: Hide Community Chat
 ## Notes: Hides the Guild & Communities chat by default and can be toggled with a button
 ## Author: Mon3yb
-## Version: v1.0.0
+## Version: @project-version@
 
+## X-Category: Chat & Communication, Guild
+## X-License: Unlicense: Anyone is free to copy, modify, publish, use, compile, sell, or distribute this software, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means.
+## X-Website: https://github.com/Mon3yb/HideCommunityChat
 ## X-Curse-Project-ID: 1395886
 ## X-Wago-ID: XKq92dKy
 
