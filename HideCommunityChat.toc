@@ -1,4 +1,4 @@
-## Interface: 110207,120000
+## Interface: 110207,120000,120001
 
 ## Title: Hide Community Chat
 ## Notes: Hides the Guild & Communities chat by default and can be toggled with a button
