@@ -5,6 +5,7 @@
 ## Author: @project-author@
 ## Version: @project-version@
 ## IconTexture: Interface\AddOns\HideCommunityChat\logo.tga
+## Category: Chat
 
 ## X-Category: Chat & Communication, Guild
 ## X-License: Unlicense: Anyone is free to copy, modify, publish, use, compile, sell, or distribute this software, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means.
